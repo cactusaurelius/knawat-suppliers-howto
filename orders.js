@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const FormData = require('form-data');
 
 const webService = 'https://webservice.tsoft.com.tr/rest1';
-const authorization = { token: 'erp9vvugc3cb2cocfg8mdrdqh4' }; // Token expires
+const authorization = { token: '9s4oou0dstml2sj04mquvp1mnm' }; // Token expires
 
 const customer = JSON.stringify([
   {
@@ -64,16 +64,18 @@ const address = JSON.stringify([ { "customer_id": 32, "title": "İş Adresim", "
 
 module.exports = {
   request({ path, method = 'get', body }) {
-    const form = this.jsonToFormData(body);
+    // const form = this.jsonToFormData(body);
+    // const form = "token=la0s9agpbtomi8i82rl45atf6m&data=%5B%0A++%7B%0A++++++%22OrderCode%22%3A+%22SC1111%22%2C%0A++++++%22CustomerCode%22%3A+%22T32%22%2C%0A++++++%22CustomerId%22%3A+%2232%22%2C%0A++++++%22Currency%22%3A+%22TL%22%2C%0A++++++%22PaymentTypeId%22%3A+%22-2%22%2C%0A++++++%22SubPaymentTypeId%22%3A+%22%22%2C%0A++++++%22OrderStatusId%22%3A+%225%22%2C%0A++++++%22InvoiceAddressId%22%3A+%22%22%2C%0A++++++%22InvoiceTitle%22%3A+%22%C4%B0%C5%9F+Adresim%22%2C%0A++++++%22InvoiceName%22%3A+%22K%C3%BCbra+K.%22%2C%0A++++++%22InvoiceIdentityNumber%22%3A+%22%22%2C%0A++++++%22InvoiceTaxOffice%22%3A+%22%22%2C%0A++++++%22InvoiceTaxNumber%22%3A+%2212324445%22%2C%0A++++++%22InvoiceMobile%22%3A+%225364922333%22%2C%0A++++++%22InvoiceOtherPhone%22%3A+%22%22%2C%0A++++++%22InvoiceCountry%22%3A+%22T%C3%BCrkiye%22%2C%0A++++++%22InvoiceCity%22%3A+%22%C4%B0stanbul%22%2C%0A++++++%22InvoiceTown%22%3A+%22Zeytinburnu%22%2C%0A++++++%22InvoiceDistrict%22%3A+%22Zeytinburnu%22%2C%0A++++++%22InvoiceAddress%22%3A+%22Cirpici+Mah.+Seyitnizam+Caddesi.+No%3A30%2F1A%22%2C%0A++++++%22InvoiceZipcode%22%3A+%2234025%22%2C%0A++++++%22DeliveryAddressId%22%3A+%22%22%2C%0A++++++%22DeliveryTitle%22%3A+%22%C4%B0%C5%9F+adresim%22%2C%0A++++++%22DeliveryName%22%3A+%22K%C3%BCbra+K.%22%2C%0A++++++%22DeliveryMobile%22%3A+%225364922333%22%2C%0A++++++%22DeliveryOtherPhone%22%3A+%22%22%2C%0A++++++%22DeliveryCountry%22%3A+%22T%C3%BCrkiye%22%2C%0A++++++%22DeliveryCity%22%3A+%22%C4%B0stanbul%22%2C%0A++++++%22DeliveryTown%22%3A+%22Zeytinburnu%22%2C%0A++++++%22DeliveryDistrict%22%3A+%22Zeytinburnu%22%2C%0A++++++%22DeliveryAddress%22%3A+%22Cirpici+Mah.+Seyitnizam+Caddesi.+No%3A30%2F1A%22%2C%0A++++++%22DeliveryZipcode%22%3A+%2234025%22%2C%0A++++++%22OrderTotalPrice%22%3A+%22250%22%2C%0A++++++%22CargoCode%22%3A+%223%22%2C%0A++++++%22OrderDate%22%3A+%221429855185%22%2C%0A++++++%22Products%22%3A+%5B%0A++++++++++%7B%0A++++++++++++++%22ProductCode%22%3A+%22T625%22%2C%0A++++++++++++++%22VariantType1%22%3A+%22%22%2C%0A++++++++++++++%22VariantType2%22%3A+%22%22%2C%0A++++++++++++++%22SubProductCode%22%3A+%22%22%2C%0A++++++++++++++%22Quantity%22%3A+%221%22%0A++++++++++%7D%0A++++++%5D%0A++%7D%0A%5D"
+    const form = `token=${authorization.token}&data=`+createCustomer
     return fetch(path, {
       method,
-      body: form
-    }).then(async res => {
-      const parsedRes = await res.json();
-      if (!res.ok) {
-        throw new Error('Something went wrong.');
-      }
-      return parsedRes;
+      body: form,
+      headers: {"content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
+      redirect: 'follow'
+    })
+    .then( res => {
+
+      return res.json();
     });
   },
   list() {
@@ -103,7 +105,7 @@ module.exports = {
     return this.request({
       path: `${webService}/order/get`,
       method: 'post',
-      body
+      body,
     }).catch(err => {
       throw new Error(err.message, err.code);
     });
@@ -391,6 +393,7 @@ module.exports = {
   jsonToFormData(data) {
     const formData = new FormData();
     this.buildFormData(formData, data);
+    console.log(formData)
     return formData;
   }
 };
